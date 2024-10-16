@@ -1,9 +1,29 @@
-CXXFLAGS = -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` -I./
+CXX = g++
+CXXFLAGS = -Wall -fPIC -I./src/include
+LDFLAGS = -shared
 
-all:
+INCLUDE_DIR = ./src/include
+LIB_DIR = ./src/lib
+BUILD_DIR = ./build
+
+TARGET_DIR = ./build/eigen_calculator.so
+
+SRC = $(wildcard $(LIB_DIR)/*.cpp)
+OBJ = $(SRC:$(LIB_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+
+all: $(TARGET_DIR)
+
+$(TARGET_DIR): $(OBJ)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJ)
+
+$(BUILD_DIR)/%.o: $(LIB_DIR)/%.cpp
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean test
 
-clean:
-
 test:
+
+clean:
+	rm -rf $(BUILD_DIR)
