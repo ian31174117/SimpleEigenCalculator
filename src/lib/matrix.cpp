@@ -12,7 +12,16 @@ Matrix::~Matrix() {
 }
 
 void Matrix::matrix_set(int row, int col, float val){
-    
+    if(row < 0 || row >= this->get_rows() || col < 0 || col >= this->get_cols()){
+        std::cerr << "Matrix index out of bounds" << std::endl;
+        exit(1);
+    }
+    if(this->is_transposed){
+        this->data[col * this->rows + row] = val;
+    } else {
+        this->data[row * this->cols + col] = val;
+    }
+    return;
 }
 
 float Matrix::matrix_get(int row, int col) const{
