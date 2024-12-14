@@ -33,6 +33,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install numpy pytest
+        python -m pip install pybind11
 
     # Build the project using `make`
     - name: Build project
