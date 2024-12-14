@@ -1,19 +1,19 @@
 #include "utils.hpp"
 
-Matrix multiply_naive(const Matrix& A, const Matrix& B){
+Matrix multiply_naive(const Matrix &A, const Matrix &B){
     if(A.get_cols() != B.get_rows()){
-        std::cerr << "Matrix dimensions do not match for multiplication" << std::endl;
-        exit(1);
+        throw std::invalid_argument("col of A does not match row of B");
     }
-    Matrix C(A.get_rows(), B.get_cols());
-    for(int i = 0; i < A.get_rows(); i++){
-        for(int j = 0; j < B.get_cols(); j++){
-            float sum = 0;
-            for(int k = 0; k < A.get_cols(); k++){
-                sum += A.matrix_get(i, k) * B.matrix_get(k, j);
+    Matrix result(A.get_rows(), B.get_cols());
+    //init result
+    for(size_t i = 0; i < A.get_rows(); ++i){
+        for(size_t j = 0; j < B.get_cols(); ++j){
+            double sum = 0;
+            for(size_t k = 0; k < A.get_cols(); ++k){
+                sum += A(i, k) * B(k, j);
             }
-            C.matrix_set(i, j, sum);
+            result(i, j) = sum;
         }
     }
-    return C;
-}
+    return result;
+};

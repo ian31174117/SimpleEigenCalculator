@@ -4,19 +4,36 @@
 
 class Matrix {
     public:
-        Matrix(int _rows, int _cols);
-        ~Matrix();
-        int get_rows() const { return this->rows; };
-        int get_cols() const { return this->cols; };
-        void matrix_set(int row, int col, float val);
-        float matrix_get(int row, int col) const;
-        void transpose();
-        bool is_transpose() const { return this->is_transposed; };
-        Matrix submatrix(int start_row, int end_row, int start_col, int end_col);
-        Matrix operator*(const Matrix& other);
+        Matrix(size_t _rows, size_t _cols);
+        ~Matrix() = default;
+        Matrix(const Matrix & other){
+            this->rows = other.rows;
+            this->cols = other.cols;
+            this->data = new double[this->rows * this->cols];
+            for(size_t i = 0; i < this->rows; i++){
+                for(size_t j = 0; j < this->cols; j++){
+                    this->data[i * this->cols + j] = other.data[i * this->cols + j];
+                }
+            }
+        };
+        size_t get_rows() const { return this->rows; };
+        size_t get_cols() const { return this->cols; };
+        double operator() (size_t i, size_t j) const { return data[i * cols + j]; };
+        double& operator() (size_t i, size_t j) { return data[i * cols + j]; };
+        Matrix & operator=(Matrix && other){
+            if(this == &other){
+                return *this;
+            }
+            delete[] this->data;
+            this->rows = other.rows;
+            this->cols = other.cols;
+            this->data = other.data;
+            other.data = nullptr;
+            return *this;
+        };
+        size_t rows;
+        size_t cols;
     private:
-        int rows;
-        int cols;
-        float* data;
-        bool is_transposed;
+        
+        double* data;
 };
