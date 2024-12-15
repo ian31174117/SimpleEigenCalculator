@@ -27,6 +27,9 @@ PYBIND11_MODULE(eigen_calculator, m){
         .def("getEigenValues", &SimpleEigenCalculator::getEigenValues)
         .def("getEigenVectors", &SimpleEigenCalculator::getEigenVectors)
         .def("setMethod", &SimpleEigenCalculator::setMethod)
-        .def("getMethod", &SimpleEigenCalculator::getMethod);
+        .def("getMethod", &SimpleEigenCalculator::getMethod)
+        .def("setTol", &SimpleEigenCalculator::setTol)
+        .def("setMaxIter", &SimpleEigenCalculator::setMaxIter)
+        .def("setSortFlag", &SimpleEigenCalculator::setSortFlag);
     m.def("multiply_naive", &multiply_naive);
 }

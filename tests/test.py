@@ -60,6 +60,9 @@ def test_jacobian():
     solver.setMatrix(mat1)
     solver.setMethod(eigen_calculator.EigenMethod.JACOBIAN)
     solver.calculateEigen()
+    solver.setTol(1e-8)
+    solver.setMaxIter(1000)
+    solver.setSortFlag(True)
     mat_eigenValues = solver.getEigenValues()
     mat_eigenVectors = solver.getEigenVectors()
     mat2_flatten = np.zeros(n)
@@ -69,9 +72,10 @@ def test_jacobian():
     np_eigenvalues_sorted = np.sort(np_eigenvalues)
     mat2_flatten_sorted = np.sort(mat2_flatten)
     np_eigenvalues_sorted_args = np.argsort(np_eigenvalues)
+    np_eigenvalues_sorted_args = np_eigenvalues_sorted_args[::-1]
     np_eigenvectors_sorted = np.zeros((n, n))
     for i in range(n):
-        np_eigenvectors_sorted[:, n - i- 1] = np_eigenvectors[:, np_eigenvalues_sorted_args[i]]
+        np_eigenvectors_sorted[:, i] = np_eigenvectors[:, np_eigenvalues_sorted_args[i]]
 
     assert np.allclose(np_eigenvalues_sorted, mat2_flatten_sorted)
 

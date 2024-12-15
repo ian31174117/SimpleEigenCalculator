@@ -22,6 +22,9 @@ class SimpleEigenCalculator{
         Matrix getEigenVectors();
         void setMethod(EigenMethod _method);
         EigenMethod getMethod() { return this->method; };
+        void setTol(float _tol) { this->tol = _tol; };
+        void setMaxIter(int _max_iter) { this->max_iter = _max_iter; };
+        void setSortFlag(bool _sort_flag) { this->sort_flag = _sort_flag; };
     private:
         Matrix matrix = Matrix(0, 0);
         Matrix eigen_vectors = Matrix(0, 0);
