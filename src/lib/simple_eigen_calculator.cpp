@@ -26,6 +26,7 @@ void SimpleEigenCalculator::calculateEigen(){
         _jacobian();
     } else {
         // QR method
+        _qr();
     }
 }
 
@@ -190,4 +191,50 @@ void SimpleEigenCalculator::_rotate(size_t k, size_t l){
         }
     }*/
     return;
+}
+
+void SimpleEigenCalculator::_qr(){
+    if(this->matrix.get_rows() == 0 || this->matrix.get_cols() == 0){
+        throw std::invalid_argument("Matrix not set");
+    }
+    if(this->matrix.get_rows() != this->matrix.get_cols()){
+        throw std::invalid_argument("Matrix must be square");
+    }
+
+    size_t n = this->matrix.get_rows();
+    this->eigen_vectors = Matrix(n, n);
+    for(size_t iter = 0; iter < this->max_iter; iter++){
+        auto [Q, R] = qr_decomposition(this->matrix);
+        if(this->multiply_method == MultiplyMethod::NAIVE){
+            this->matrix = multiply_naive(R, Q);
+        } else {
+            this->matrix = multiply_tile(R, Q, 16);
+        }
+
+        double off_diag_sum = 0.0;
+        for(size_t i = 0; i < n; i++){
+            for(size_t j = 0; j < n; j++){
+                if(i != j){
+                    off_diag_sum += std::abs(this->matrix(i, j));
+                }
+            }
+        }
+        if(off_diag_sum < this->tol){
+            break;
+        }
+    }
+    if(sort_flag){
+        std::vector<std::pair<double, size_t>> eigen_values_idx;
+        for(size_t i = 0; i < n; i++){
+            eigen_values_idx.push_back(std::make_pair(this->matrix(i, i), i));
+        }
+        Matrix eigen_vectors_temp = this->eigen_vectors;
+        std::sort(eigen_values_idx.begin(), eigen_values_idx.end(), std::greater<std::pair<double, size_t>>());
+        for(size_t i = 0; i < n; i++){
+            this->matrix(i, i) = eigen_values_idx[i].first;
+            for(size_t j = 0; j < n; j++){
+                this->eigen_vectors(j, i) = eigen_vectors_temp(j, eigen_values_idx[i].second);
+            }
+        }
+    }
 }

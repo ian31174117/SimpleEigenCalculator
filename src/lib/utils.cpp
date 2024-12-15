@@ -18,6 +18,40 @@ Matrix multiply_naive(const Matrix &A, const Matrix &B){
     return result;
 };
 
+Matrix multiply_tile(const Matrix &A, const Matrix &B, size_t tile_size) {
+    if (A.get_cols() != B.get_rows()) {
+        throw std::invalid_argument("Matrix dimensions do not match for multiplication");
+    }
+    
+    Matrix result(A.get_rows(), B.get_cols());
+
+    size_t n = A.get_rows();
+    size_t m = A.get_cols();
+    size_t p = B.get_cols();
+
+    for (size_t i = 0; i < n; i += tile_size) {
+        for (size_t j = 0; j < p; j += tile_size) {
+            for (size_t k = 0; k < m; k += tile_size) {
+                size_t i_end = std::min(i + tile_size, n);
+                size_t j_end = std::min(j + tile_size, p);
+                size_t k_end = std::min(k + tile_size, m);
+
+                for (size_t ii = i; ii < i_end; ++ii) {
+                    for (size_t jj = j; jj < j_end; ++jj) {
+                        double sum = result(ii, jj);
+                        for (size_t kk = k; kk < k_end; ++kk) {
+                            sum += A(ii, kk) * B(kk, jj);
+                        }
+                        result(ii, jj) = sum;
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 std::pair<Matrix, Matrix> qr_decomposition(const Matrix &A){
     if(A.get_rows() != A.get_cols()){
         throw std::invalid_argument("Matrix must be square");
