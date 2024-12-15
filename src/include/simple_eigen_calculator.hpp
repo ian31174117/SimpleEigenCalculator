@@ -4,6 +4,8 @@
 
 #include<vector>
 #include<utility>
+#include<math.h>
+#include<algorithm>
 
 enum class EigenMethod{
     JACOBIAN,
@@ -16,14 +18,17 @@ class SimpleEigenCalculator{
         ~SimpleEigenCalculator();
         void setMatrix(Matrix _matrix);
         void calculateEigen();
-        std::vector<float> getEigenValues();
+        Matrix getEigenValues();
         Matrix getEigenVectors();
         void setMethod(EigenMethod _method);
+        EigenMethod getMethod() { return this->method; };
     private:
         Matrix matrix = Matrix(0, 0);
         Matrix eigen_vectors = Matrix(0, 0);
         EigenMethod method = EigenMethod::JACOBIAN;
-        std::vector<float> eigen_values;
         float tol = 1e-8;
         int max_iter = 1000;
+        void _jacobian();
+        void _rotate(size_t k, size_t l);
+        bool sort_flag = true;
 };
