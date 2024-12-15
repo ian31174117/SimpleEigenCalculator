@@ -23,6 +23,9 @@ PYBIND11_MODULE(eigen_calculator, m){
     pybind11::enum_<MultiplyMethod>(m, "MultiplyMethod")
         .value("NAIVE", MultiplyMethod::NAIVE)
         .value("TILE", MultiplyMethod::TILE);
+    pybind11::enum_<QRMethod>(m, "QRMethod")
+        .value("NAIVE", QRMethod::NAIVE)
+        .value("MKL", QRMethod::MKL);
     pybind11::class_<SimpleEigenCalculator>(m, "SimpleEigenCalculator")
         .def(pybind11::init<>())
         .def("setMatrix", &SimpleEigenCalculator::setMatrix)
@@ -34,8 +37,10 @@ PYBIND11_MODULE(eigen_calculator, m){
         .def("setMultiplyMethod", &SimpleEigenCalculator::setMultiplyMethod)
         .def("setTol", &SimpleEigenCalculator::setTol)
         .def("setMaxIter", &SimpleEigenCalculator::setMaxIter)
-        .def("setSortFlag", &SimpleEigenCalculator::setSortFlag);
+        .def("setSortFlag", &SimpleEigenCalculator::setSortFlag)
+        .def("setQRMethod", &SimpleEigenCalculator::setQRMethod);
     m.def("multiply_naive", &multiply_naive);
     m.def("multiply_tile", &multiply_tile);
     m.def("qr_decomposition", &qr_decomposition);
+    m.def("qr_decomposition_mkl", &qr_decomposition_mkl);
 }

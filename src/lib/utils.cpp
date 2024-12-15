@@ -98,3 +98,30 @@ std::pair<Matrix, Matrix> qr_decomposition(const Matrix &A){
         }
         return {Q, R};
 };
+
+std::pair<Matrix, Matrix> qr_decomposition_mkl(const Matrix &A){
+    if(A.get_rows() != A.get_cols()){
+        throw std::invalid_argument("Matrix must be square");
+    }
+
+    int n = A.get_rows();
+    Matrix Q(n,n), R(n, n);
+    const std::unique_ptr<double[]> tau(new double[n]);
+    LAPACKE_dgeqrf(LAPACK_ROW_MAJOR, n, n, A.buffer_ref(), n, tau.get());
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            if(i > j){
+                R(i, j) = 0.0;
+            } else {
+                R(i, j) = A(i, j);
+            }
+        }
+    }
+    LAPACKE_dorgqr(LAPACK_ROW_MAJOR, n, n, n, A.buffer_ref(), n, tau.get());
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            Q(i, j) = A(i, j);
+        }
+    }
+    return {Q, R};
+};

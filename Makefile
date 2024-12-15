@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -fPIC -I./src/include `python3 -m pybind11 --includes` 
+CXXFLAGS = -Wall -fPIC -I./src/include `python3 -m pybind11 --includes` -I/usr/include/mkl -lblas -lmkl_rt
 LDFLAGS = -shared
 
 INCLUDE_DIR = ./src/include
@@ -17,7 +17,7 @@ all: $(TARGET_DIR)
 
 $(TARGET_DIR): $(OBJ)
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJ)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJ) -lblas -lmkl_rt
 
 $(BUILD_DIR)/%.o: $(LIB_DIR)/%.cpp
 	@mkdir -p $(BUILD_DIR)
@@ -30,6 +30,6 @@ test: $(TARGET_DIR) tests/test.py
 
 timer: $(TARGET_DIR) tests/test.py
 	PYTHONPATH=$(BUILD_DIR):$(PYTHONPATH) python3 tests/test.py
-	
+
 clean:
 	rm -rf $(BUILD_DIR)

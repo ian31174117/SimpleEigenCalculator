@@ -17,6 +17,11 @@ enum class MultiplyMethod{
     TILE
 };
 
+enum class QRMethod{
+    NAIVE,
+    MKL
+};
+
 class SimpleEigenCalculator{
     public:
         SimpleEigenCalculator();
@@ -27,6 +32,7 @@ class SimpleEigenCalculator{
         Matrix getEigenVectors();
         void setMethod(EigenMethod _method);
         void setMultiplyMethod(MultiplyMethod _method) { this->multiply_method = _method; };
+        void setQRMethod(QRMethod _method) { this->qr_method = _method; };
         EigenMethod getMethod() { return this->method; };
         void setTol(float _tol) { this->tol = _tol; };
         void setMaxIter(int _max_iter) { this->max_iter = _max_iter; std::cout << "max_iter = " << this->max_iter << std::endl; };
@@ -36,6 +42,7 @@ class SimpleEigenCalculator{
         Matrix eigen_vectors = Matrix(0, 0);
         EigenMethod method = EigenMethod::JACOBIAN;
         MultiplyMethod multiply_method = MultiplyMethod::NAIVE;
+        QRMethod qr_method = QRMethod::NAIVE;
         float tol;
         int max_iter;
         void _jacobian();

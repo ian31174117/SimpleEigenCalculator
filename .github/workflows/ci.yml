@@ -27,7 +27,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y g++ gcc make
+        sudo apt-get install -y g++ gcc make gfortran intel-mkl-full
 
     - name: Install Python dependencies
       run: |

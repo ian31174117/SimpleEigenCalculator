@@ -204,7 +204,17 @@ void SimpleEigenCalculator::_qr(){
     size_t n = this->matrix.get_rows();
     this->eigen_vectors = Matrix(n, n);
     for(size_t iter = 0; iter < this->max_iter; iter++){
-        auto [Q, R] = qr_decomposition(this->matrix);
+        Matrix Q(n, n);
+        Matrix R(n, n);
+        if(this->qr_method == QRMethod::NAIVE){
+            std::pair<Matrix, Matrix> qr = qr_decomposition(this->matrix);
+            Q = qr.first;
+            R = qr.second;
+        } else {
+            std::pair<Matrix, Matrix> qr = qr_decomposition_mkl(this->matrix);
+            Q = qr.first;
+            R = qr.second;
+        }
         if(this->multiply_method == MultiplyMethod::NAIVE){
             this->matrix = multiply_naive(R, Q);
         } else {
