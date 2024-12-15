@@ -93,6 +93,42 @@ def test_jacobian():
         for j in range(n):
             assert np.allclose(abs(np_eigenvectors_sorted[i, j]), abs(mat_eigenVectors[i, j]), atol=1e-5)
 
+def test_qr():
+    mat1 = eigen_calculator.Matrix(3, 3)
+    mat1[0,0] = 4.0
+    mat1[0,1] = -2.0
+    mat1[1,0] = -2.0
+    mat1[1,1] = 4.0
+    mat1[2,2] = 3.0
+    mat1[0,2] = 1.0
+    mat1[2,0] = 1.0
+    mat1[1,2] = -2.0
+    mat1[2,1] = -2.0
+    Q, R = eigen_calculator.qr_decomposition(mat1)
+    print("Q:")
+    for i in range(3):
+        for j in range(3):
+            print(Q[i, j], end=' ')
+        print()
+    print("R:")
+    for i in range(3):
+        for j in range(3):
+            print(R[i, j], end=' ')
+        print()
+
+    np_arr = np.array([[4.0, -2.0, 1.0], [-2.0, 4.0, -2.0], [1.0, -2.0, 3.0]])
+    Q_np, R_np = np.linalg.qr(np_arr)
+    print("Q_np:")
+    print(Q_np)
+    print("R_np:")
+    print(R_np)
+
+    for i in range(3):
+        for j in range(3):
+            assert np.allclose(abs(Q[i, j]), abs(Q_np[i, j]), atol=1e-5)
+            assert np.allclose(abs(R[i, j]), abs(R_np[i, j]), atol=1e-5)
+    
 
 if __name__ == '__main__':
     test_jacobian()
+    test_qr()

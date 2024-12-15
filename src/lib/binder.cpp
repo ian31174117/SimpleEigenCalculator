@@ -32,4 +32,5 @@ PYBIND11_MODULE(eigen_calculator, m){
         .def("setMaxIter", &SimpleEigenCalculator::setMaxIter)
         .def("setSortFlag", &SimpleEigenCalculator::setSortFlag);
     m.def("multiply_naive", &multiply_naive);
+    m.def("qr_decomposition", &qr_decomposition);
 }
